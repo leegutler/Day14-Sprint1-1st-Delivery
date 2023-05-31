@@ -73,6 +73,10 @@ function renderboeard(board) {
     elBoard.innerHTML = strHTML
 }
 
+function setClasses() {
+
+}
+
 /// placing the count inside the cell object minesAroundCount.
 function setMinesNegCount(board) {
     for (var i = 0; i < gBoard.length; i++) {
@@ -83,17 +87,15 @@ function setMinesNegCount(board) {
     }
 }
 
-
-
 /// Count mines around each cell and set the cell's minesAroundCount.
 function countMinesNegsAround(board, rowIdx, colIdx) {
     var MinesNegsCount = 0
-    
+
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
-        if (i < 0 || i >= board.length) continue
+        if (i < 0 || i >= board.length) continue;
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-            if (i === board.i && j === board.j) continue
-            if (j < 0 || j >= board[0].length) continue
+            if (j < 0 || j >= board[i].length) continue;
+            if (i === rowIdx && j === colIdx) continue;
             var currCell = board[i][j]
             // console.log('currCell',currCell)
             if (currCell.isMine) MinesNegsCount++
@@ -105,9 +107,13 @@ function countMinesNegsAround(board, rowIdx, colIdx) {
 function onCellClicked(elCell, i, j) {
     setMinesNegCount(gBoard)
     console.log('Cell clicked: ', elCell, i, j)
+    
 
     const cell = gBoard[i][j]
-    console.log(cell)
+    // console.log(cell)
+    if (cell.minesAroundCount === 0) {
+        revealSafeCell(gBoard, i, j)
+    }
 
     if (cell.isMine) {
         elCell.classList.add('mine')
@@ -115,12 +121,31 @@ function onCellClicked(elCell, i, j) {
         return
     }
 
-    if (!cell.isMine) {
+    if (!cell.isMine && cell.minesAroundCount > 0) {
         elCell.classList.add('shown')
         elCell.innerText = countMinesNegsAround(gBoard, i, j)
-        return
+    } else {
+        elCell.classList.add('shown')
     }
 }
+
+function revealSafeCell(board, rowIdx, colIdx) {
+    var elCurrClass = document.querySelectorAll('.cell')
+    console.log('hi')
+    for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+        if (i < 0 || i >= board.length) continue;
+        for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+            if (j < 0 || j >= board[i].length) continue;
+            if (i === rowIdx && j === colIdx) continue;
+            var elCurrClass = board[i][j]
+            console.log(elCurrClass)
+
+        }
+
+    }
+}
+
+
 
 
 
