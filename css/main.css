@@ -1,0 +1,31 @@
+
+body {
+    /* background-color: black; */
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+table {
+    margin: auto;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(208, 202, 213);
+}
+
+
+.mine{
+    background-color: red;
+}
+
+.mark{
+    background-color: blueviolet;
+
+}
+
+.shown{
+    background-color: rgb(82, 107, 235);
+
+}
