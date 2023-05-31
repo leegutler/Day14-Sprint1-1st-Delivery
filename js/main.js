@@ -54,8 +54,13 @@ function renderboeard(board) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
             const currCell = board[i][j]
-            var className = 'cell' // getClassName(board,i,j) maybe this will be more accurat need to continue
-            // className+= getClassName(board,i,j)
+            var className = 'cell'
+            // var className = '' 
+            // className += getClassName(board,i,j)
+            //  if (currCell.isMine) className += 'mine'
+            //  if (currCell.isShown) className += 'shown'
+            //  if (currCell.isMarked) className += 'mark'
+
             const title = `Cell: ${i}, ${j}`
 
             strHTML += `<td 
@@ -70,21 +75,22 @@ function renderboeard(board) {
     elBoard.innerHTML = strHTML
 }
 
-function getClassName(board,i,j) {
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[0].length; j++) {
-            var currCell = board[i][j]
+// function getClassName(board, i, j) {
+//     for (var i = 0; i < board.length; i++) {
+//         for (var j = 0; j < board[0].length; j++) {
+//             var currCell = board[i][j]
 
-            // if (currCell.isMine) {
-            //     currCell.classList.add('mine')
-            //     currCell.innerText = MINE
-            // }
+//             // if (currCell.isMine) {
+//             //     currCell.classList.add('mine')
+//             //     currCell.innerText = MINE
+//             // }
 
-        }
+//         }
 
-    }
+//     }
 
-}
+// }
+
 /// placing the count inside the cell object minesAroundCount.
 function setMinesNegCount(board) {
     for (var i = 0; i < gBoard.length; i++) {
