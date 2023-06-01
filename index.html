@@ -14,14 +14,16 @@
     <h1>Sprint 01</h1>
     <h2>Minesweeper</h2>
 
+    <div class="smile"></div>
+
     <table>
         <tbody class="board"></tbody>
 
-        <button>Small</button>
-        <button>Medium</button>
-        <button>Large</button>
+        <button class="small" onclick="onSetLevels(4,2)">Small</button>
+        <button class="medium" onclick="onSetLevels(8,14)">Medium</button>
+        <button class="marge" onclick="onSetLevels(12,32)">Large</button>
     </table>
-
+    <div id="timer">000</div>
     <script src="js/main.js"></script>
 </body>
 

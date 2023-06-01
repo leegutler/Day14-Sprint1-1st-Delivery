@@ -1,7 +1,9 @@
 'use strict'
 // Pieces Types
 const MINE = '💣'
-const FLAG = '🚩'
+// const FLAG = '🚩'
+const SMILE = '🤩'
+const SAD = '😩'
 
 /// MODAL
 
@@ -13,7 +15,11 @@ var gGame = {
     markedCount: 0,
     secsPassed: 0
 }
-var gLevel = { SIZE: 4, MINES: 2 }
+
+var gLevel = {
+    SIZE: 4,
+    MINES: 2
+}
 
 function onInit() {
     gBoard = buildBoard()
@@ -23,13 +29,11 @@ function onInit() {
 
 function buildBoard() {
     /// Build the board - starting with 4*4
-    const rowCount = 4
-    const colCount = 4
     const board = []
 
-    for (var i = 0; i < rowCount; i++) {
+    for (var i = 0; i < gLevel.SIZE; i++) {
         board[i] = []
-        for (var j = 0; j < colCount; j++) {
+        for (var j = 0; j < gLevel.SIZE; j++) {
             const cell = {
                 minesAroundCount: 0,
                 isShown: false,
@@ -37,13 +41,15 @@ function buildBoard() {
                 isMarked: true
             }
             board[i][j] = cell
-            if (!cell.isMine) MINE
+            // if (!cell.isMine) cell = MINE
+
         }
     }
-    // placing 2 MINES just for the testing 
+    // placing 2 MINES 
     board[0][2].isMine = true
     board[2][2].isMine = true
     console.table('board', board)
+    setMinesNegCount(board)
     return board
 }
 
@@ -54,54 +60,41 @@ function renderboeard(board) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
             const currCell = board[i][j]
-            var className = 'cell'
-            // var className = '' 
-            // className += getClassName(board,i,j)
-            //  if (currCell.isMine) className += 'mine'
-            //  if (currCell.isShown) className += 'shown'
-            //  if (currCell.isMarked) className += 'mark'
-
+            var className 
             const title = `Cell: ${i}, ${j}`
+            var innerContnt = ''
+            if (currCell.isMine) innerContnt += MINE
+            if (currCell.minesAroundCount === 0 ) innerContnt += ''
+            if (currCell.minesAroundCount > 0 ) innerContnt += ''
+
 
             strHTML += `<td 
             data-i="${i}" data-j="${j}" 
             title="${title}"  
-            class=" ${className} "  
-            onclick="onCellClicked(this, ${i}, ${j})" ></td>`
+            class="cell ${className}"  
+            onclick="onCellClicked(this, ${i}, ${j})" >${innerContnt}</td > `
         }
         strHTML += '</tr>'
     }
+
+    const elSmile = document.querySelector('.smile')
+    elSmile.innerText = SMILE
+
+
     const elBoard = document.querySelector('.board')
     elBoard.innerHTML = strHTML
 }
 
-// function getClassName(board, i, j) {
-//     for (var i = 0; i < board.length; i++) {
-//         for (var j = 0; j < board[0].length; j++) {
-//             var currCell = board[i][j]
-
-//             // if (currCell.isMine) {
-//             //     currCell.classList.add('mine')
-//             //     currCell.innerText = MINE
-//             // }
-
-//         }
-
-//     }
-
-// }
-
-/// placing the count inside the cell object minesAroundCount.
 function setMinesNegCount(board) {
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[0].length; j++)
-            if (!gBoard[i][j].isMine) {
-                gBoard[i][j].minesAroundCount = countMinesNegsAround(board, i, j)
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++)
+            if (!board[i][j].isMine) {
+                board[i][j].minesAroundCount = countMinesNegsAround(board, i, j)
             }
     }
 }
 
-/// Count mines around each cell and set the cell's minesAroundCount.
+/// Count mines around each cell 
 function countMinesNegsAround(board, rowIdx, colIdx) {
     var MinesNegsCount = 0
 
@@ -118,48 +111,86 @@ function countMinesNegsAround(board, rowIdx, colIdx) {
     return MinesNegsCount
 }
 
-function onCellClicked(elCell, i, j) {
-    setMinesNegCount(gBoard)
-    console.log('Cell clicked: ', elCell, i, j)
+function onCellClicked(elCell, cellI, cellJ) {
+    // startTimer()
+    // console.log('Cell clicked: ', elCell, cellI, cellJ)
+    var elCell = document.querySelector('.cell')
 
-
-    const cell = gBoard[i][j]
-    // console.log(cell)
-    if (cell.minesAroundCount === 0) {
-        revealAroundSafeCell(gBoard, i, j)
+    if (elCell.minesAroundCount > 0) {
+        elCell.isShown = true
+        elCell.classList.remove('.shown')
+        revealAroundSafeCell(gBoard, cellI, cellJ)
     }
 
-    if (cell.isMine) {
-        elCell.classList.add('mine')
-        elCell.innerText = MINE
-        revealAllMinesLocations(gBoard)
-        return
-    }
 
-    if (!cell.isMine && cell.minesAroundCount > 0) {
-        elCell.classList.add('shown')
-        elCell.innerText = countMinesNegsAround(gBoard, i, j)
-    } else {
-        elCell.classList.add('shown')
-    }
+
+    // if (gBoard[cellI][cellJ].minesAroundCount === 0) {
+    //     gBoard[cellI][cellJ].isShown = true
+    //     elCell.classList.add('shown')
+    //     revealAroundSafeCell(gBoard, cellI, cellJ)
+
+    // }
+
+    // if (gBoard[cellI][cellJ].isMine) {
+    //     console.log(gBoard[cellI][cellJ])
+    //     elCell.classList.add('mine')
+    //     elCell.classList.remove('shown')
+    //     elCell.innerText = MINE
+    //     revealAllMinesLocations(gBoard)
+
+    // }
+    console.log(gBoard)
 }
 
 function revealAroundSafeCell(board, rowIdx, colIdx) {
-
+    // console.log(rowIdx, colIdx)
+    // var safeCells = []
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= board.length) continue;
-
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= board[i].length) continue;
             if (i === rowIdx && j === colIdx) continue;
-            var elCurrClass = board[i][j]
-            console.log(elCurrClass)
-            // elCurrClass = document.querySelectorAll('cell')
-            // elCurrClass.classList.add('.shown')
+            var currCell = board[i][j]
 
+            if (!currCell.isShown) {
+                currCell.isShown = true
+                currCell = document.querySelector(`[data - i="${i}"][data - j="${j}"]`)
+                console.log(currCell)
+
+                currCell.classList.add('shown')
+                currCell.innerText = countMinesNegsAround(gBoard, i, j)
+            }
         }
-
     }
+}
+
+function revealAllMinesLocations(board) {
+    var minesLocation = []
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+
+            var currCell = board[i][j]
+            if (currCell.isMine) {
+                minesLocation.push(currCell)
+                currCell = document.querySelector(`[data - i= "${i}"][data - j="${j}"]`)
+                currCell.classList.add('mine')
+                currCell.innerText = MINE
+            }
+        }
+    }
+
+    console.log('game over')
+    gameOver()
+}
+
+function onSetLevels(size, mine) {
+
+    gLevel.SIZE = size
+    gLevel.MINES = mine
+    gBoard = buildBoard()
+    renderboeard(gBoard)
+    console.log(gLevel)
+
 }
 
 function gameOver() {
@@ -167,20 +198,29 @@ function gameOver() {
 
 }
 
-function revealAllMinesLocations(board) {
-    var minesLocation = []
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[0].length; j++) {
-            var currCell = board[i][j]
-            if (currCell.isMine) {
-                minesLocation.push(currCell)
-            }
-        }
-    }
-    var elCell = document.querySelectorAll('.mine')
-    elCell.hidden = false
-    console.log(elCell)
-    gameOver()
+
+
+
+var gStartTime
+var gTimerInterval
+
+function stopTimer() {
+    clearInterval(gTimerInterval)
 }
 
+function startTimer() {
+    gStartTime = Date.now()
+    gTimerInterval = setInterval(updateTimer, 1)
+}
 
+function updateTimer() {
+    var currentTime = Date.now()
+    var elapsedTime = currentTime - gStartTime
+    var formattedTime = (elapsedTime / 10000).toFixed(1)
+    Math.floor(formattedTime)
+    document.getElementById('timer').textContent = formattedTime
+}
+
+function clearTimer() {
+    document.getElementById('timer').textContent = (0 / 10000).toFixed(1)
+}
