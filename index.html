@@ -9,21 +9,22 @@
     <link rel="stylesheet" href="css/main.css" />
 </head>
 
-<body onload="onInit()">
+<body onload="onInit()" oncontextmenu="return false;">
 
     <h1>Sprint 01</h1>
     <h2>Minesweeper</h2>
-
+    <!-- <div id="timer" style="position: absolute; right: 10px;">000</div> -->
+    <button onclick="restart()">🤩</button>
     <div class="smile"></div>
 
     <table>
         <tbody class="board"></tbody>
-
-        <button class="small" onclick="onSetLevels(4,2)">Small</button>
-        <button class="medium" onclick="onSetLevels(8,14)">Medium</button>
-        <button class="marge" onclick="onSetLevels(12,32)">Large</button>
     </table>
-    <div id="timer">000</div>
+
+    <button class="small" onclick="onSetLevels(4,2)">Small</button>
+    <button class="medium" onclick="onSetLevels(8,14)">Medium</button>
+    <button class="marge" onclick="onSetLevels(12,32)">Large</button>
+    <!-- <div id="timer">000</div> -->
     <script src="js/main.js"></script>
 </body>
 
